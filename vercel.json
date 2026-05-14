@@ -1,25 +1,30 @@
 {
+    "version": 2,
     "builds": [
         {
             "src": "api/index.py",
             "use": "@vercel/python"
         },
         {
-        "src": "index.html",
-        "use": "@vercel/static"
+            "src": "CSS/**",
+            "use": "@vercel/static"
         },
         {
-        "src": "CSS/**",
-        "use": "@vercel/static"
-        },
-        {
-        "src": "JS/**",
-        "use": "@vercel/static"
+            "src": "JS/**",
+            "use": "@vercel/static"
         }
     ],
-    "routes": [        
+    "routes": [
         {
-            "src": "/api/(.*)",
+            "src": "/CSS/(.*)",
+            "dest": "/CSS/$1"
+        },
+        {
+            "src": "/JS/(.*)",
+            "dest": "/JS/$1"
+        },
+        {
+            "src": "/(.*)",
             "dest": "api/index.py"
         }
     ]
