@@ -70,8 +70,11 @@ app.mount(
 # TEMPLATES
 # ======================================================
 
+# templates = Jinja2Templates(
+#     directory=str(BASE_DIR)
+# )
 templates = Jinja2Templates(
-    directory=str(BASE_DIR)
+    directory=str(BASE_DIR / "templates")
 )
 
 # ======================================================
