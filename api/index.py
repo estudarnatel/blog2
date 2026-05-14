@@ -1,7 +1,5 @@
-
 from fastapi import (
     FastAPI,
-    HTTPException,
     Request,
     Form
 )
@@ -14,10 +12,7 @@ from fastapi.responses import (
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from typing import List
-# from models import Aprovado, Blog
 from models import Blog
-# import database
 
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
@@ -29,7 +24,6 @@ from mangum import Mangum
 # ======================================================
 # APP
 # ======================================================
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -60,18 +54,6 @@ app.add_middleware(
 # STATIC FILES
 # ======================================================
 
-# app.mount("/CSS", StaticFiles(directory="CSS"), name="css")
-# app.mount("/JS", StaticFiles(directory="JS"), name="js")
-
-
-
-# ======================================================
-# TEMPLATES
-# ======================================================
-
-# templates = Jinja2Templates(directory=".")
-
-
 app.mount(
     "/CSS",
     StaticFiles(directory=str(BASE_DIR / "CSS")),
@@ -84,6 +66,9 @@ app.mount(
     name="js"
 )
 
+# ======================================================
+# TEMPLATES
+# ======================================================
 
 templates = Jinja2Templates(
     directory=str(BASE_DIR)
@@ -136,9 +121,9 @@ def home(request: Request):
     # ==========================================
 
     response = templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "visitas": visitas,
             "saudacao": saudacao,
             "usuario_logado": usuario_logado
@@ -180,9 +165,9 @@ def salvar_nome(nome: str):
 def login_form(request: Request):
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "mostrar_login": True,
             "erro": None
         }
@@ -199,16 +184,8 @@ def login(
     password: str = Form(...)
 ):
 
-    # if username == USERNAME and password == PASSWORD:
     if password == PASSWORD:
 
-        # request.session["user"] = username
-
-        # return RedirectResponse(
-        #     url="/perfil",
-        #     status_code=302
-        # )
-        # salva sessão
         request.session["user"] = username
 
         # redireciona
@@ -226,9 +203,9 @@ def login(
         return response
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "mostrar_login": True,
             "erro": "Usuário ou senha inválidos."
         }
@@ -250,27 +227,13 @@ def perfil(request: Request):
         )
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "perfil": True,
             "usuario": user
         }
     )
-
-# ======================================================
-# LOGOUT
-# ======================================================
-
-# @app.get("/logout")
-# def logout(request: Request):
-
-#     request.session.clear()
-
-#     return RedirectResponse(
-#         url="/login",
-#         status_code=302
-#     )
 
 # ======================================================
 # LOGOUT
@@ -292,8 +255,6 @@ def logout(request: Request):
     response.delete_cookie("nome")
 
     return response
-
-
 
 # ======================================================
 # MANGUM
